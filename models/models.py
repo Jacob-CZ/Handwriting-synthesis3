@@ -174,6 +174,7 @@ class HandWritingPredictionNet(nn.Module):
                 hidden = (_hidden, _cell)
 
                 y_hat = y_hat.squeeze()
+                print(y_hat.shape)
 
                 Z = sample_from_out_dist(y_hat, bias)
                 inp = Z
@@ -371,17 +372,14 @@ class HandWritingSynthesisNet(nn.Module):
                 # for batch sampling
                 # y_hat = y_hat.squeeze(dim=1)
                 # Z = sample_batch_from_out_dist(y_hat, bias)
+                
                 y_hat = y_hat.squeeze()
                 Z = sample_from_out_dist(y_hat, bias)
                 inp = Z
                 gen_seq.append(Z)
-
+                print(Z)
                 seq_len += 1
-
         gen_seq = torch.cat(gen_seq, dim=1)
         gen_seq = gen_seq.cpu().numpy()
-
-        print("EOS:", self.EOS)
-        print("seq_len:", seq_len)
 
         return gen_seq

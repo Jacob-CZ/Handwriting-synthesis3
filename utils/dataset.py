@@ -34,7 +34,7 @@ class HandwritingDataset(Dataset):
 
         # Convert list of str into array of list of chars
         char_seqs = [list(char_seq) for char_seq in texts]
-        char_seqs = np.asarray(char_seqs)
+        char_seqs = np.asarray_chkfinite(char_seqs)
 
         char_lens = [len(char_seq) for char_seq in char_seqs]
         max_char_len = np.max(char_lens)
@@ -43,7 +43,7 @@ class HandwritingDataset(Dataset):
         mask_shape = (n_total, max_char_len)  # (6000,64)
         char_mask = np.zeros(mask_shape, dtype=np.float32)
 
-        # Input text array
+        # Input text arrayValueError: setting an array element with a sequence. The requested array has an inhomogeneous shape after 1 dimensions. The detected shape was (6000,) + inhomogeneous part.
         inp_text = np.ndarray((n_total, max_char_len), dtype='<U1')
         inp_text[:, :] = ' '
 
@@ -146,3 +146,4 @@ class HandwritingDataset(Dataset):
             input_seq[1:, :] = torch.from_numpy(self.dataset[idx, :-1, :])
             target = torch.from_numpy(self.dataset[idx])
             return (input_seq, target, mask)
+

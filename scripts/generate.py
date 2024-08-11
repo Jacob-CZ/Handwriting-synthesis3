@@ -41,7 +41,7 @@ def generate_unconditional_seq(model_path, seq_len, device, bias, style, prime):
 
     model = HandWritingPredictionNet()
     # load the best model
-    model.load_state_dict(torch.load(model_path, map_location=device))
+    model.load_state_dict(torch.load(model_path, map_location=device), strict=False)
     model = model.to(device)
     model.eval()
 
@@ -75,7 +75,7 @@ def generate_conditional_sequence(
     model = HandWritingSynthesisNet(window_size=len(char_to_id))
     print("Vocab size: ", len(char_to_id))
     # load the best model
-    model.load_state_dict(torch.load(model_path, map_location=device))
+    model.load_state_dict(torch.load(model_path, map_location=device), strict=False)
 
     # Print model's state_dict
     # print(f"Model's state_dict:")
