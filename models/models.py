@@ -335,6 +335,7 @@ class HandWritingSynthesisNet(nn.Module):
         is_map=False,
         prime=False,
     ):
+        
         seq_len = 0
         gen_seq = []
         with torch.no_grad():
@@ -361,7 +362,8 @@ class HandWritingSynthesisNet(nn.Module):
                 inp = inp.new_zeros(batch_size, 1, 3)
                 _, window_vector, kappa = self.init_hidden(batch_size, inp.device)
 
-            while not self.EOS and seq_len < 2000:
+            while not self.EOS and seq_len < 5000:
+                print(seq_len)
                 y_hat, state, window_vector, kappa = self.forward(
                     inp, text, text_mask, hidden, window_vector, kappa, is_map
                 )
@@ -377,8 +379,9 @@ class HandWritingSynthesisNet(nn.Module):
                 Z = sample_from_out_dist(y_hat, bias)
                 inp = Z
                 gen_seq.append(Z)
-                print(Z)
                 seq_len += 1
+        final_hidden = [hidden, window_vector, kappa]
+        torch.save(final_hidden, "hidden.pt")
         gen_seq = torch.cat(gen_seq, dim=1)
         gen_seq = gen_seq.cpu().numpy()
 

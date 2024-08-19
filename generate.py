@@ -71,6 +71,7 @@ def generate_conditional_sequence(
     real_text,
     is_map,
     batch_size=1,
+    load_hidden = False
 ):
     model = HandWritingSynthesisNet(window_size=len(char_to_id))
     print("Vocab size: ", len(char_to_id))
@@ -108,6 +109,8 @@ def generate_conditional_sequence(
     text_mask = torch.ones(text.shape).to(device)
 
     hidden, window_vector, kappa = model.init_hidden(batch_size, device)
+    if load_hidden:
+        [hidden, window_vector, kappa] = torch.load("hidden.pt")
 
     print("Generating sequence....")
     gen_seq = model.generate(
